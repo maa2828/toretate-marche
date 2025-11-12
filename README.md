@@ -75,4 +75,6 @@ SNS（Xやインスタ）やメッセージアプリ（LINE）のような機能
 - 使用予定のライブラリ（Devise payjp pg_search など）
 
 # 画面遷移図
-https://www.figma.com/design/zHKHVhzLE6XfCm1UCVSfgp/maa-%E7%94%BB%E9%9D%A2%E9%81%B7%E7%A7%BB%E5%9B%B3%E3%80%80%E8%A6%8B%E6%9C%AC%E5%8F%82%E8%80%83?node-id=0-1&t=zMqLfhykqbKGm8bV-1
+https://www.figma.com/design/kEJNQwCEt5VncPkwK2NaWH/20251108-10--%E7%94%BB%E9%9D%A2%E9%81%B7%E7%A7%BB%E5%9B%B3-?node-id=2061-1739&p=f&t=EX8rS4em1Jzqlmv0-0
+
+
