@@ -77,4 +77,93 @@ SNS（Xやインスタ）やメッセージアプリ（LINE）のような機能
 # 画面遷移図
 https://www.figma.com/design/kEJNQwCEt5VncPkwK2NaWH/20251108-10--%E7%94%BB%E9%9D%A2%E9%81%B7%E7%A7%BB%E5%9B%B3-?node-id=2061-1739&p=f&t=EX8rS4em1Jzqlmv0-0
 
+#ER図
+https://gyazo.com/5fc29772ec3f96a5c15eb44dfed2ed06
+
+### 本サービスの概要（700文字以内） 
+「とれたてマルシェ」は、近隣の小規模生産者が“今日採れた”野菜や果物を気軽に出品し、消費者が写真を見てそのまま購入できる直売アプリです。SNS感覚のシンプルな閲覧体験と、1商品＝単発購入の最小フローに絞ることで、高齢の生産者でも運用しやすく、消費者は迷わず買えるのが特徴です。想定ユーザーは〔生産者：出品・在庫管理を最低限で運用したい個人農家〕〔消費者：地元の新鮮食材を手軽に購入したい家族層〕。MVPではユーザー登録、商品一覧・詳細、画像選択つきの注文確定までを提供し、決済は案内ベース（振込）とします。注文時点の価格・画像をスナップショット保存し、在庫を自動減算。まずは実家農園を唯一の出品者として運用し、将来的な多店舗化に耐える設計を採用します。
+
+
+### MVPで実装する予定の機能 
+※ MVP（Minimum Viable Product：最小限の実用的な製品）として実装予定の機能
+認証：メール＋パスワード登録/ログイン、ログアウト
+役割：users.role（1:seller, 2:buyer）で権限制御
+商品：sellerによる商品登録/編集/公開・在庫数管理、画像添付（Active Storage）
+一覧/詳細：公開商品のタイムライン表示、詳細で画像選択
+注文：単一商品の購入フロー（数量入力→確認→確定）
+スナップショット：unit_price_snapshot・selected_image_key の保存、total_amount計算
+在庫連動：確定時にstock_quantityを減算（0でsold_out）
+注文状態：status（0:pending, 1:confirmed, 2:canceled）とplaced_at
+管理（簡易）：sellerの自分の商品/注文のみ閲覧
+
+
+
+### users（ユーザー情報）
+| カラム名 | 型 | 説明 |
+|-----------|----|------|
+| id | bigint | PK |
+| email | string | ログイン用メールアドレス（ユニーク制約 / NOT NULL） |
+| encrypted_password | string | パスワード（Deviseによる暗号化 / NOT NULL） |
+| name | string | 表示名（例：浅野農園・佐藤花子など） |
+| role | integer | ユーザー種別（1:seller／2:buyer） |
+| created_at | datetime | 登録日時 |
+| updated_at | datetime | 更新日時 |
+
+🗂 **インデックス**：email（unique）, role
+
+---
+
+### products（商品情報）
+| カラム名 | 型 | 説明 |
+|-----------|----|------|
+| id | bigint | PK |
+| seller_id | bigint | 出品者ID（FK：users.id） |
+| title | string | 商品タイトル（例：朝採れトマト） |
+| description | text | 商品説明（例：完熟トマトを朝収穫しました） |
+| price | integer | 価格（単位：円） |
+| stock_quantity | integer | 在庫数 |
+| status | integer | 商品状態（0:draft／1:published／2:sold_out） |
+| created_at | datetime | 登録日時 |
+| updated_at | datetime | 更新日時 |
+
+📎 **画像**：Active Storageを利用（`has_many_attached :images`）  
+🗂 **インデックス**：seller_id, status
+
+---
+
+### orders（注文情報）
+| カラム名 | 型 | 説明 |
+|-----------|----|------|
+| id | bigint | PK |
+| buyer_id | bigint | 購入者ID（FK：users.id） |
+| seller_id | bigint | 出品者ID（FK：users.id） |
+| product_id | bigint | 商品ID（FK：products.id） |
+| quantity | integer | 注文数 |
+| unit_price_snapshot | integer | 注文時点の単価（価格固定のため） |
+| total_amount | integer | 合計金額（quantity × unit_price_snapshot） |
+| selected_image_key | string | 選択画像のキーまたはURL（任意） |
+| status | integer | 注文状態（例：0:pending, 1:confirmed, 2:shipped など拡張予定） |
+| created_at | datetime | 登録日時 |
+| updated_at | datetime | 更新日時 |
+
+🗂 **インデックス**：buyer_id, seller_id, product_id
+
+---
+
+### 備考
+- MVP段階では **配送情報・決済情報は未実装**（決済は銀行振込案内のみ）  
+- Active Storageを利用し、商品画像を複数枚登録可能  
+- seller と buyer は同じ `users` テーブルで role により区別  
+- MVP段階では実家の農園（seller 1件）のみ登録を想定
+
+
+### ER図の注意点（チェック項目）
+- [ ] プルリクエストに最新のER図のスクリーンショットを画像が表示される形で掲載できている
+- [ ] テーブル名は複数形になっている
+- [ ] カラムの型は記載されている
+- [ ] 外部キーは適切に設けられている
+- [ ] リレーションは適切に描かれているか？多対多の関係は存在しない
+- [ ] STIは使用しないER図になっている
+- [ ] Postsテーブルにpost_nameのように"テーブル名+カラム名"を付けていないか
+
 
