@@ -84,18 +84,17 @@ https://gyazo.com/5fc29772ec3f96a5c15eb44dfed2ed06
 「とれたてマルシェ」は、近隣の小規模生産者が“今日採れた”野菜や果物を気軽に出品し、消費者が写真を見てそのまま購入できる直売アプリです。SNS感覚のシンプルな閲覧体験と、1商品＝単発購入の最小フローに絞ることで、高齢の生産者でも運用しやすく、消費者は迷わず買えるのが特徴です。想定ユーザーは〔生産者：出品・在庫管理を最低限で運用したい個人農家〕〔消費者：地元の新鮮食材を手軽に購入したい家族層〕。MVPではユーザー登録、商品一覧・詳細、画像選択つきの注文確定までを提供し、決済は案内ベース（振込）とします。注文時点の価格・画像をスナップショット保存し、在庫を自動減算。まずは実家農園を唯一の出品者として運用し、将来的な多店舗化に耐える設計を採用します。
 
 
-### MVPで実装する予定の機能 
-※ MVP（Minimum Viable Product：最小限の実用的な製品）として実装予定の機能
-認証：メール＋パスワード登録/ログイン、ログアウト
-役割：users.role（1:seller, 2:buyer）で権限制御
-商品：sellerによる商品登録/編集/公開・在庫数管理、画像添付（Active Storage）
-一覧/詳細：公開商品のタイムライン表示、詳細で画像選択
-注文：単一商品の購入フロー（数量入力→確認→確定）
-スナップショット：unit_price_snapshot・selected_image_key の保存、total_amount計算
-在庫連動：確定時にstock_quantityを減算（0でsold_out）
-注文状態：status（0:pending, 1:confirmed, 2:canceled）とplaced_at
-管理（簡易）：sellerの自分の商品/注文のみ閲覧
+### MVPで実装する予定の機能 ※ MVP（Minimum Viable Product：最小限の実用的な製品）として実装予定の機能
 
+- 認証：メール＋パスワード登録/ログイン、ログアウト
+- 役割：users.role（1:seller, 2:buyer）で権限制御
+- 商品：sellerによる商品登録/編集/公開・在庫数管理、画像添付（Active Storage）
+- 一覧/詳細：公開商品のタイムライン表示、詳細で画像選択
+- 注文：単一商品の購入フロー（数量入力→確認→確定）
+- スナップショット：unit_price_snapshot・selected_image_key の保存、total_amount計算
+- 在庫連動：確定時にstock_quantityを減算（0でsold_out）
+- 注文状態：status（0:pending, 1:confirmed, 2:canceled）とplaced_at
+- 管理（簡易）：sellerの自分の商品/注文のみ閲覧
 
 
 ### users（ユーザー情報）
