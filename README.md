@@ -77,7 +77,7 @@ SNS（Xやインスタ）やメッセージアプリ（LINE）のような機能
 # 画面遷移図
 https://www.figma.com/design/kEJNQwCEt5VncPkwK2NaWH/20251108-10--%E7%94%BB%E9%9D%A2%E9%81%B7%E7%A7%BB%E5%9B%B3-?node-id=2061-1739&p=f&t=EX8rS4em1Jzqlmv0-0
 
-#ER図
+# ER図
 https://gyazo.com/5fc29772ec3f96a5c15eb44dfed2ed06
 
 ### 本サービスの概要（700文字以内） 
