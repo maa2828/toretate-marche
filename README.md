@@ -87,17 +87,24 @@ https://gyazo.com/5fc29772ec3f96a5c15eb44dfed2ed06
 
 ### MVPで実装する予定の機能 ※ MVP（Minimum Viable Product：最小限の実用的な製品）として実装予定の機能
 
-- 認証：メール＋パスワード登録/ログイン、ログアウト
-- 役割：users.role（1:seller, 2:buyer）で権限制御
-- 商品：sellerによる商品登録/編集/公開・在庫数管理、画像添付（Active Storage）
-- 一覧/詳細：公開商品のタイムライン表示、詳細で画像選択
-- 注文：単一商品の購入フロー（数量入力→確認→確定）
-- スナップショット：unit_price_snapshot・selected_image_key の保存、total_amount計算
-- 在庫連動：確定時にstock_quantityを減算（0でsold_out）
-- 注文状態：status（0:pending, 1:confirmed, 2:canceled）とplaced_at
-- 管理（簡易）：sellerの自分の商品/注文のみ閲覧
+#### 認証機能
+-メールアドレス＋パスワードによる新規登録 / ログイン / ログアウト
+#### ユーザー種別・権限制御
+-users.role（1: seller, 2: buyer）で画面・操作を出し分け
+-seller：商品投稿・編集・公開ステータス変更が可能
+-buyer：タイムライン閲覧・商品詳細閲覧のみ
+#### 商品投稿機能（生産者向け）
+-seller による商品の登録 / 編集 / 公開・非公開切り替え
+-価格・在庫数の入力
+-画像添付（Active Storage、複数枚想定でもOK）
+#### タイムライン / 詳細表示機能（消費者向け）
+-公開中の商品をタイムライン形式で一覧表示（新着順）
+-商品詳細画面で、説明文・価格・在庫数・画像（選択 / 切り替え表示）を閲覧可能
+（任意で追加すると親切）
+-※購入機能・注文管理（カート / オーダー）は次フェーズで実装予定
 
 
+### users（ユーザー情報）
 ### users（ユーザー情報）
 | カラム名 | 型 | 説明 |
 |-----------|----|------|
@@ -109,7 +116,7 @@ https://gyazo.com/5fc29772ec3f96a5c15eb44dfed2ed06
 | created_at | datetime | 登録日時 |
 | updated_at | datetime | 更新日時 |
 
-🗂 **インデックス**：email（unique）, role
+ **インデックス**：email（unique）, role
 
 ---
 
@@ -126,27 +133,13 @@ https://gyazo.com/5fc29772ec3f96a5c15eb44dfed2ed06
 | created_at | datetime | 登録日時 |
 | updated_at | datetime | 更新日時 |
 
-📎 **画像**：Active Storageを利用（`has_many_attached :images`）  
-🗂 **インデックス**：seller_id, status
+ **画像**：Active Storageを利用（`has_many_attached :images`）  
+ **インデックス**：seller_id, status
 
 ---
 
-### orders（注文情報）
-| カラム名 | 型 | 説明 |
-|-----------|----|------|
-| id | bigint | PK |
-| buyer_id | bigint | 購入者ID（FK：users.id） |
-| seller_id | bigint | 出品者ID（FK：users.id） |
-| product_id | bigint | 商品ID（FK：products.id） |
-| quantity | integer | 注文数 |
-| unit_price_snapshot | integer | 注文時点の単価（価格固定のため） |
-| total_amount | integer | 合計金額（quantity × unit_price_snapshot） |
-| selected_image_key | string | 選択画像のキーまたはURL（任意） |
-| status | integer | 注文状態（例：0:pending, 1:confirmed, 2:shipped など拡張予定） |
-| created_at | datetime | 登録日時 |
-| updated_at | datetime | 更新日時 |
+※注文・決済に関するテーブル（例：orders）は、次フェーズで追加予定です。
 
-🗂 **インデックス**：buyer_id, seller_id, product_id
 
 ---
 
