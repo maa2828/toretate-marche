@@ -43,8 +43,9 @@ Instagram・X・YouTubeで発信
 
 ## サービスの差別化ポイント・推しポイント
 食べチョクやレット、らでぃっしゅぼーやなどの競合と違い、タイムライン機能をつけて
-SNS（Xやインスタ）やメッセージアプリ（LINE）のような機能をつけて
-コミュニケーションが近くリアルタイムな売買ができる
+SNS（Xやインスタ）やメッセージアプリ（LINE）さらにはマッチングアプリのような
+“距離の近いコミュニケーション” を取り入れることで、生産者の「今日採れた」をその瞬間に伝え、消費者は直感的に選んで購入できる
+新しい直売体験を実現します。
 
 ## 機能候補
 現状作ろうと思っている機能、案段階の機能案として
@@ -75,7 +76,6 @@ SNS（Xやインスタ）やメッセージアプリ（LINE）のような機能
 - 使用予定のライブラリ（Devise payjp pg_search など）
 
 # 画面遷移図
-
 https://www.figma.com/design/kEJNQwCEt5VncPkwK2NaWH/20251108-10--%E7%94%BB%E9%9D%A2%E9%81%B7%E7%A7%BB%E5%9B%B3-?node-id=2061-1739&p=f&t=EX8rS4em1Jzqlmv0-0
 
 # ER図
@@ -87,15 +87,21 @@ https://www.figma.com/design/kEJNQwCEt5VncPkwK2NaWH/20251108-10--%E7%94%BB%E9%9D
 
 ### MVPで実装する予定の機能 ※ MVP（Minimum Viable Product：最小限の実用的な製品）として実装予定の機能
 
-- 認証：メール＋パスワード登録/ログイン、ログアウト
-- 役割：users.role（1:seller, 2:buyer）で権限制御
-- 商品：sellerによる商品登録/編集/公開・在庫数管理、画像添付（Active Storage）
-- 一覧/詳細：公開商品のタイムライン表示、詳細で画像選択
-- 注文：単一商品の購入フロー（数量入力→確認→確定）
-- スナップショット：unit_price_snapshot・selected_image_key の保存、total_amount計算
-- 在庫連動：確定時にstock_quantityを減算（0でsold_out）
-- 注文状態：status（0:pending, 1:confirmed, 2:canceled）とplaced_at
-- 管理（簡易）：sellerの自分の商品/注文のみ閲覧
+#### 認証機能
+-メールアドレス＋パスワードによる新規登録 / ログイン / ログアウト
+#### ユーザー種別・権限制御
+-users.role（1: seller, 2: buyer）で画面・操作を出し分け
+-seller：商品投稿・編集・公開ステータス変更が可能
+-buyer：タイムライン閲覧・商品詳細閲覧のみ
+#### 商品投稿機能（生産者向け）
+-seller による商品の登録 / 編集 / 公開・非公開切り替え
+-価格・在庫数の入力
+-画像添付（Active Storage、複数枚想定でもOK）
+#### タイムライン / 詳細表示機能（消費者向け）
+-公開中の商品をタイムライン形式で一覧表示（新着順）
+-商品詳細画面で、説明文・価格・在庫数・画像（選択 / 切り替え表示）を閲覧可能
+（任意で追加すると親切）
+-※購入機能・注文管理（カート / オーダー）は次フェーズで実装予定
 
 
 ### users（ユーザー情報）
@@ -109,7 +115,7 @@ https://www.figma.com/design/kEJNQwCEt5VncPkwK2NaWH/20251108-10--%E7%94%BB%E9%9D
 | created_at | datetime | 登録日時 |
 | updated_at | datetime | 更新日時 |
 
-🗂 **インデックス**：email（unique）, role
+ **インデックス**：email（unique）, role
 
 ---
 
@@ -126,32 +132,18 @@ https://www.figma.com/design/kEJNQwCEt5VncPkwK2NaWH/20251108-10--%E7%94%BB%E9%9D
 | created_at | datetime | 登録日時 |
 | updated_at | datetime | 更新日時 |
 
-📎 **画像**：Active Storageを利用（`has_many_attached :images`）  
-🗂 **インデックス**：seller_id, status
+ **画像**：Active Storageを利用（`has_many_attached :images`）  
+ **インデックス**：seller_id, status
 
 ---
 
-### orders（注文情報）
-| カラム名 | 型 | 説明 |
-|-----------|----|------|
-| id | bigint | PK |
-| buyer_id | bigint | 購入者ID（FK：users.id） |
-| seller_id | bigint | 出品者ID（FK：users.id） |
-| product_id | bigint | 商品ID（FK：products.id） |
-| quantity | integer | 注文数 |
-| unit_price_snapshot | integer | 注文時点の単価（価格固定のため） |
-| total_amount | integer | 合計金額（quantity × unit_price_snapshot） |
-| selected_image_key | string | 選択画像のキーまたはURL（任意） |
-| status | integer | 注文状態（例：0:pending, 1:confirmed, 2:shipped など拡張予定） |
-| created_at | datetime | 登録日時 |
-| updated_at | datetime | 更新日時 |
+※注文・決済に関するテーブル（例：orders）は、次フェーズで追加予定です。
 
-🗂 **インデックス**：buyer_id, seller_id, product_id
 
 ---
 
 ### 備考
-- MVP段階では **配送情報・決済情報は未実装**（決済は銀行振込案内のみ）  
+- MVP段階では **購入・配送・決済の情報は未実装**（決済は銀行振込案内のみ）  
 - Active Storageを利用し、商品画像を複数枚登録可能  
 - seller と buyer は同じ `users` テーブルで role により区別  
 - MVP段階では実家の農園（seller 1件）のみ登録を想定
