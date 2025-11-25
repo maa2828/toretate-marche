@@ -157,5 +157,3 @@ https://www.figma.com/design/kEJNQwCEt5VncPkwK2NaWH/20251108-10--%E7%94%BB%E9%9D
 - [ ] リレーションは適切に描かれているか？多対多の関係は存在しない
 - [ ] STIは使用しないER図になっている
 - [ ] Postsテーブルにpost_nameのように"テーブル名+カラム名"を付けていないか
-
-
