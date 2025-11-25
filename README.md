@@ -43,8 +43,9 @@ Instagram・X・YouTubeで発信
 
 ## サービスの差別化ポイント・推しポイント
 食べチョクやレット、らでぃっしゅぼーやなどの競合と違い、タイムライン機能をつけて
-SNS（Xやインスタ）やメッセージアプリ（LINE）のような機能をつけて
-コミュニケーションが近くリアルタイムな売買ができる
+SNS（Xやインスタ）やメッセージアプリ（LINE）さらにはマッチングアプリのような
+“距離の近いコミュニケーション” を取り入れることで、生産者の「今日採れた」をその瞬間に伝え、消費者は直感的に選んで購入できる
+新しい直売体験を実現します。
 
 ## 機能候補
 現状作ろうと思っている機能、案段階の機能案として
@@ -75,7 +76,84 @@ SNS（Xやインスタ）やメッセージアプリ（LINE）のような機能
 - 使用予定のライブラリ（Devise payjp pg_search など）
 
 # 画面遷移図
-[https://www.figma.com/design/zHKHVhzLE6XfCm1UCVSfgp/maa-%E7%94%BB%E9%9D%A2%E9%81%B7%E7%A7%BB%E5%9B%B3%E3%80%80%E8%A6%8B%E6%9C%AC%E5%8F%82%E8%80%83?node-id=0-1&t=zMqLfhykqbKGm8bV-1](https://www.figma.com/design/kEJNQwCEt5VncPkwK2NaWH/20251108-10--%E7%94%BB%E9%9D%A2%E9%81%B7%E7%A7%BB%E5%9B%B3-?node-id=2061-1739&p=f&t=U02Lpaio19uyMON6-0)
+https://www.figma.com/design/kEJNQwCEt5VncPkwK2NaWH/20251108-10--%E7%94%BB%E9%9D%A2%E9%81%B7%E7%A7%BB%E5%9B%B3-?node-id=2061-1739&p=f&t=EX8rS4em1Jzqlmv0-0
 
 # ER図
-https://www.figma.com/design/kEJNQwCEt5VncPkwK2NaWH/20251108-10--%E7%94%BB%E9%9D%A2%E9%81%B7%E7%A7%BB%E5%9B%B3-?node-id=2096-361&t=D6T0mZPCMjBOktfK-0
+[![Image from Gyazo](https://i.gyazo.com/e8f8b98136a2958a24c2ea4d67f8eb30.png)](https://gyazo.com/e8f8b98136a2958a24c2ea4d67f8eb30)
+
+### 本サービスの概要（700文字以内） 
+「とれたてマルシェ」は、近隣の小規模生産者が“今日採れた”野菜や果物を気軽に出品し、消費者が写真を見てそのまま購入できる直売アプリです。SNS感覚のシンプルな閲覧体験と、1商品＝単発購入の最小フローに絞ることで、高齢の生産者でも運用しやすく、消費者は迷わず買えるのが特徴です。想定ユーザーは〔生産者：出品・在庫管理を最低限で運用したい個人農家〕〔消費者：地元の新鮮食材を手軽に購入したい家族層〕。MVPではユーザー登録、商品一覧・詳細、画像選択つきの注文確定までを提供し、決済は案内ベース（振込）とします。注文時点の価格・画像をスナップショット保存し、在庫を自動減算。まずは実家農園を唯一の出品者として運用し、将来的な多店舗化に耐える設計を採用します。
+
+
+### MVPで実装する予定の機能 ※ MVP（Minimum Viable Product：最小限の実用的な製品）として実装予定の機能
+
+#### 認証機能
+-メールアドレス＋パスワードによる新規登録 / ログイン / ログアウト
+#### ユーザー種別・権限制御
+-users.role（1: seller, 2: buyer）で画面・操作を出し分け
+-seller：商品投稿・編集・公開ステータス変更が可能
+-buyer：タイムライン閲覧・商品詳細閲覧のみ
+#### 商品投稿機能（生産者向け）
+-seller による商品の登録 / 編集 / 公開・非公開切り替え
+-価格・在庫数の入力
+-画像添付（Active Storage、複数枚想定でもOK）
+#### タイムライン / 詳細表示機能（消費者向け）
+-公開中の商品をタイムライン形式で一覧表示（新着順）
+-商品詳細画面で、説明文・価格・在庫数・画像（選択 / 切り替え表示）を閲覧可能
+（任意で追加すると親切）
+-※購入機能・注文管理（カート / オーダー）は次フェーズで実装予定
+
+
+### users（ユーザー情報）
+| カラム名 | 型 | 説明 |
+|-----------|----|------|
+| id | bigint | PK |
+| email | string | ログイン用メールアドレス（ユニーク制約 / NOT NULL） |
+| encrypted_password | string | パスワード（Deviseによる暗号化 / NOT NULL） |
+| name | string | 表示名（例：浅野農園・佐藤花子など） |
+| role | integer | ユーザー種別（1:seller／2:buyer） |
+| created_at | datetime | 登録日時 |
+| updated_at | datetime | 更新日時 |
+
+ **インデックス**：email（unique）, role
+
+---
+
+### products（商品情報）
+| カラム名 | 型 | 説明 |
+|-----------|----|------|
+| id | bigint | PK |
+| seller_id | bigint | 出品者ID（FK：users.id） |
+| title | string | 商品タイトル（例：朝採れトマト） |
+| description | text | 商品説明（例：完熟トマトを朝収穫しました） |
+| price | integer | 価格（単位：円） |
+| stock_quantity | integer | 在庫数 |
+| status | integer | 商品状態（0:draft／1:published／2:sold_out） |
+| created_at | datetime | 登録日時 |
+| updated_at | datetime | 更新日時 |
+
+ **画像**：Active Storageを利用（`has_many_attached :images`）  
+ **インデックス**：seller_id, status
+
+---
+
+※注文・決済に関するテーブル（例：orders）は、次フェーズで追加予定です。
+
+
+---
+
+### 備考
+- MVP段階では **購入・配送・決済の情報は未実装**（決済は銀行振込案内のみ）  
+- Active Storageを利用し、商品画像を複数枚登録可能  
+- seller と buyer は同じ `users` テーブルで role により区別  
+- MVP段階では実家の農園（seller 1件）のみ登録を想定
+
+
+### ER図の注意点（チェック項目）
+- [ ] プルリクエストに最新のER図のスクリーンショットを画像が表示される形で掲載できている
+- [ ] テーブル名は複数形になっている
+- [ ] カラムの型は記載されている
+- [ ] 外部キーは適切に設けられている
+- [ ] リレーションは適切に描かれているか？多対多の関係は存在しない
+- [ ] STIは使用しないER図になっている
+- [ ] Postsテーブルにpost_nameのように"テーブル名+カラム名"を付けていないか
