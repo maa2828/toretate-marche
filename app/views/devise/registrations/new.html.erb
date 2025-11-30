@@ -1,0 +1,63 @@
+<div class="min-h-screen bg-gradient-to-b from-green-50 to-green-100 py-8 px-4">
+  <div class="max-w-md mx-auto">
+    <h1 class="text-2xl font-bold text-green-800 mb-6 text-center">新規登録</h1>
+
+    <div class="bg-white rounded-3xl shadow-lg p-8">
+      <div class="text-center mb-6">
+        <div class="text-5xl mb-3">🌱</div>
+        <h2 class="text-xl font-bold mb-1">とれたてマルシェ</h2>
+        <p class="text-sm text-gray-600">農家さんと消費者をつなぐ</p>
+      </div>
+
+      <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+        <%= render "devise/shared/error_messages", resource: resource %>
+
+        <div class="mb-4">
+          <%= f.label :name, "お名前", class: "block text-sm font-medium mb-2" %>
+          <%= f.text_field :name, autofocus: true, placeholder: "山田 太郎", class: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent bg-gray-50" %>
+        </div>
+
+        <div class="mb-4">
+          <%= f.label :email, "メールアドレス", class: "block text-sm font-medium mb-2" %>
+          <%= f.email_field :email, autocomplete: "email", placeholder: "example@mail.com", class: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent bg-gray-50" %>
+        </div>
+
+        <div class="mb-4">
+          <%= f.label :password, "パスワード", class: "block text-sm font-medium mb-2" %>
+          <%= f.password_field :password, autocomplete: "new-password", placeholder: "8文字以上", class: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent bg-gray-50" %>
+        </div>
+
+        <div class="mb-6">
+          <%= f.label :password_confirmation, "パスワード（確認）", class: "block text-sm font-medium mb-2" %>
+          <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent bg-gray-50" %>
+        </div>
+
+        <div class="mb-6">
+          <label class="block text-sm font-medium mb-3">アカウントタイプ</label>
+          <div class="grid grid-cols-2 gap-3">
+            <label class="cursor-pointer">
+              <%= f.radio_button :role, "consumer", class: "peer sr-only" %>
+              <div class="border-2 rounded-xl p-4 text-center peer-checked:border-green-600 peer-checked:bg-green-50 hover:bg-gray-50 transition-colors">
+                <div class="text-3xl mb-2">👤</div>
+                <div class="text-sm font-semibold">消費者</div>
+              </div>
+            </label>
+            <label class="cursor-pointer">
+              <%= f.radio_button :role, "seller", class: "peer sr-only" %>
+              <div class="border-2 rounded-xl p-4 text-center peer-checked:border-green-600 peer-checked:bg-green-50 hover:bg-gray-50 transition-colors">
+                <div class="text-3xl mb-2">🌾</div>
+                <div class="text-sm font-semibold">生産者</div>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <%= f.submit "アカウント登録", class: "w-full bg-green-600 text-white py-4 rounded-xl font-semibold hover:bg-green-700 transition-colors duration-200 shadow-md" %>
+      <% end %>
+
+      <div class="mt-6 text-center">
+        <%= link_to "すでにアカウントをお持ちの方", new_session_path(resource_name), class: "text-green-600 text-sm hover:underline" %>
+      </div>
+    </div>
+  </div>
+</div>
