@@ -3,7 +3,10 @@ Rails.application.routes.draw do
     registrations: 'users/registrations'
   }
   
-  # 仮のホーム画面を作成
+  # 商品関連のルーティング
+  resources :products
+  
+  # ホーム画面
   get 'home', to: 'home#index'
   root 'home#index'
 end

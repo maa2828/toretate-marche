@@ -1,0 +1,49 @@
+<div class="container mx-auto px-4 py-8 max-w-4xl">
+  <div class="mb-4">
+    <%= link_to "← 一覧に戻る", products_path, class: "text-green-600 hover:underline" %>
+  </div>
+
+  <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+    <% if @product.images.attached? %>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
+        <% @product.images.each do |image| %>
+          <%= image_tag image, class: "w-full h-64 object-cover rounded" %>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="w-full h-64 bg-gray-200 flex items-center justify-center">
+        <span class="text-gray-400">画像なし</span>
+      </div>
+    <% end %>
+
+    <div class="p-6">
+      <h1 class="text-3xl font-bold mb-4"><%= @product.title %></h1>
+      
+      <div class="flex justify-between items-center mb-6">
+        <span class="text-3xl font-bold text-green-600">¥<%= number_with_delimiter(@product.price) %></span>
+        <span class="text-lg text-gray-600">在庫: <%= @product.stock_quantity %>個</span>
+      </div>
+
+      <div class="mb-6">
+        <h2 class="font-semibold text-lg mb-2">商品説明</h2>
+        <p class="text-gray-700 whitespace-pre-wrap"><%= @product.description %></p>
+      </div>
+
+      <div class="border-t pt-4 mb-6">
+        <p class="text-gray-600">出品者: <%= @product.seller.name %></p>
+        <p class="text-gray-600">ステータス: 
+          <span class="px-2 py-1 rounded <%= @product.published? ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' %>">
+            <%= @product.status == 'published' ? '公開中' : '下書き' %>
+          </span>
+        </p>
+      </div>
+
+      <% if current_user == @product.seller %>
+        <div class="flex space-x-4">
+          <%= link_to "編集", edit_product_path(@product), class: "bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-700" %>
+          <%= button_to "削除", product_path(@product), method: :delete, data: { confirm: "本当に削除しますか？" }, class: "bg-red-600 text-white px-6 py-3 rounded hover:bg-red-700" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

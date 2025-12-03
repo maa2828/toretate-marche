@@ -1,18 +1,27 @@
 <div class="container mx-auto px-4 py-8">
   <h1 class="text-3xl font-bold mb-4">🌱 とれたてマルシェ</h1>
   
-  <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
-    <p class="font-bold"><%= @message %></p>
-  </div>
-  
-  <div class="space-y-2">
-    <p>メールアドレス: <%= current_user.email %></p>
-    <p>アカウントタイプ: <%= current_user.role %></p>
-    <p>登録日時: <%= current_user.created_at.strftime('%Y年%m月%d日 %H:%M') %></p>
-  </div>
-  
-  <div class="mt-6">
-    <%= button_to "ログアウト", destroy_user_session_path, method: :delete, 
-        class: "bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600" %>
-  </div>
+  <% if user_signed_in? %>
+    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+      <p class="font-bold"><%= @message %></p>
+    </div>
+    
+    <div class="space-y-2 mb-6">
+      <p>メールアドレス: <%= current_user.email %></p>
+      <p>アカウントタイプ: <%= current_user.role == 'seller' ? '生産者' : '消費者' %></p>
+      <p>登録日時: <%= current_user.created_at.strftime('%Y年%m月%d日 %H:%M') %></p>
+    </div>
+    
+    <div class="space-x-4 mb-6">
+      <%= link_to "商品一覧を見る", products_path, class: "bg-green-600 text-white px-6 py-3 rounded hover:bg-green-700 inline-block" %>
+      <% if current_user.seller? %>
+        <%= link_to "商品を出品する", new_product_path, class: "bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-700 inline-block" %>
+      <% end %>
+    </div>
+    
+    <div class="mt-6">
+      <%= button_to "ログアウト", destroy_user_session_path, method: :delete, 
+          class: "bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600" %>
+    </div>
+  <% end %>
 </div>

@@ -3,8 +3,11 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
-  # Enum for role - buyerをconsumerに変更
+  # Enum for role
   enum role: { consumer: 0, seller: 1 }
+  
+  # リレーション
+  has_many :products, foreign_key: :seller_id, dependent: :destroy
   
   # Validations
   validates :name, presence: true

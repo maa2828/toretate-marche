@@ -62,3 +62,5 @@ end
 gem 'devise'
 
 gem 'rails-i18n'
+
+gem "tailwindcss-rails", "~> 4.4"

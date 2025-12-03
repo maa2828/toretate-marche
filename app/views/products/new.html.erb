@@ -1,0 +1,52 @@
+<div class="container mx-auto px-4 py-8 max-w-2xl">
+  <h1 class="text-3xl font-bold mb-6">🌱 商品を出品する</h1>
+
+  <%= form_with model: @product, local: true, class: "space-y-6" do |f| %>
+    <% if @product.errors.any? %>
+      <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+        <p class="font-bold"><%= @product.errors.count %>件のエラーがあります</p>
+        <ul class="list-disc list-inside">
+          <% @product.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div>
+      <%= f.label :title, "商品名", class: "block font-semibold mb-2" %>
+      <%= f.text_field :title, class: "w-full px-4 py-2 border rounded", placeholder: "例：朝採れトマト" %>
+    </div>
+
+    <div>
+      <%= f.label :description, "商品説明", class: "block font-semibold mb-2" %>
+      <%= f.text_area :description, rows: 5, class: "w-full px-4 py-2 border rounded", placeholder: "商品の特徴や魅力を書いてください" %>
+    </div>
+
+    <div>
+      <%= f.label :price, "価格（円）", class: "block font-semibold mb-2" %>
+      <%= f.number_field :price, class: "w-full px-4 py-2 border rounded", placeholder: "500" %>
+    </div>
+
+    <div>
+      <%= f.label :stock_quantity, "在庫数", class: "block font-semibold mb-2" %>
+      <%= f.number_field :stock_quantity, class: "w-full px-4 py-2 border rounded", placeholder: "10" %>
+    </div>
+
+    <div>
+      <%= f.label :images, "商品画像", class: "block font-semibold mb-2" %>
+      <%= f.file_field :images, multiple: true, accept: "image/*", class: "w-full" %>
+      <p class="text-sm text-gray-600 mt-1">複数枚選択できます</p>
+    </div>
+
+    <div>
+      <%= f.label :status, "公開設定", class: "block font-semibold mb-2" %>
+      <%= f.select :status, [["下書き", "draft"], ["公開", "published"]], {}, class: "w-full px-4 py-2 border rounded" %>
+    </div>
+
+    <div class="flex space-x-4">
+      <%= f.submit "出品する", class: "bg-green-600 text-white px-6 py-3 rounded hover:bg-green-700 font-semibold cursor-pointer" %>
+      <%= link_to "キャンセル", root_path, class: "bg-gray-300 text-gray-700 px-6 py-3 rounded hover:bg-gray-400" %>
+    </div>
+  <% end %>
+</div>
