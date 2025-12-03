@@ -1,26 +1,34 @@
-<h2>Log in</h2>
-
-<%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
-  <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
-  </div>
-
-  <div class="field">
-    <%= f.label :password %><br />
-    <%= f.password_field :password, autocomplete: "current-password" %>
-  </div>
-
-  <% if devise_mapping.rememberable? %>
-    <div class="field">
-      <%= f.check_box :remember_me %>
-      <%= f.label :remember_me %>
+<div style="min-height: 100vh; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; padding: 2rem;">
+  <div style="background: white; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); max-width: 450px; width: 100%; padding: 3rem;">
+    <div style="text-align: center; margin-bottom: 2rem;">
+      <div style="font-size: 4rem; margin-bottom: 1rem;">🌱</div>
+      <h2 style="color: #333; font-size: 2rem; margin: 0 0 0.5rem 0; font-weight: bold;">とれたてマルシェ</h2>
+      <p style="color: #666; margin: 0;">新鮮な農産物を、生産者から直接</p>
     </div>
-  <% end %>
 
-  <div class="actions">
-    <%= f.submit "Log in" %>
+    <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { style: "display: flex; flex-direction: column; gap: 1.5rem;" }) do |f| %>
+      <div>
+        <%= f.label :email, "メールアドレス", style: "display: block; margin-bottom: 0.5rem; color: #333; font-weight: 600;" %>
+        <%= f.email_field :email, autofocus: true, autocomplete: "email", placeholder: "example@email.com", style: "width: 100%; padding: 0.875rem; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem; transition: border-color 0.3s; box-sizing: border-box;", onfocus: "this.style.borderColor='#667eea'", onblur: "this.style.borderColor='#e0e0e0'" %>
+      </div>
+
+      <div>
+        <%= f.label :password, "パスワード", style: "display: block; margin-bottom: 0.5rem; color: #333; font-weight: 600;" %>
+        <%= f.password_field :password, autocomplete: "current-password", placeholder: "••••••••", style: "width: 100%; padding: 0.875rem; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem; transition: border-color 0.3s; box-sizing: border-box;", onfocus: "this.style.borderColor='#667eea'", onblur: "this.style.borderColor='#e0e0e0'" %>
+      </div>
+
+      <% if devise_mapping.rememberable? %>
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <%= f.check_box :remember_me, style: "width: 18px; height: 18px; cursor: pointer;" %>
+          <%= f.label :remember_me, "ログイン状態を保持する", style: "color: #666; cursor: pointer; margin: 0;" %>
+        </div>
+      <% end %>
+
+      <%= f.submit "ログイン", style: "background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 1rem; border: none; border-radius: 8px; font-size: 1.125rem; font-weight: bold; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);", onmouseover: "this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(102, 126, 234, 0.6)'", onmouseout: "this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(102, 126, 234, 0.4)'" %>
+    <% end %>
+
+    <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #e0e0e0; text-align: center;">
+      <%= render "devise/shared/links" %>
+    </div>
   </div>
-<% end %>
-
-<%= render "devise/shared/links" %>
+</div>
