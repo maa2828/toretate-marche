@@ -11,7 +11,7 @@ class Product < ApplicationRecord
   validates :description, length: { maximum: 1000 }
   validates :price, presence: true, numericality: { greater_than_or_equal_to: 0 }
   validates :stock_quantity, numericality: { greater_than_or_equal_to: 0 }
-  validates :images, presence: true
+  # validates :images, presence: true  ← この行を削除またはコメントアウト
   
   # スコープ
   scope :published_items, -> { where(status: :published).order(created_at: :desc) }

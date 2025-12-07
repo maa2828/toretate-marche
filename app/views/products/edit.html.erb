@@ -13,17 +13,6 @@
       </div>
     <% end %>
 
-    <% if @product.images.attached? %>
-      <div>
-        <p class="font-semibold mb-2">現在の画像</p>
-        <div class="grid grid-cols-3 gap-2">
-          <% @product.images.each do |image| %>
-            <%= image_tag image, class: "w-full h-32 object-cover rounded" %>
-          <% end %>
-        </div>
-      </div>
-    <% end %>
-
     <div>
       <%= f.label :title, "商品名", class: "block font-semibold mb-2" %>
       <%= f.text_field :title, class: "w-full px-4 py-2 border rounded" %>
@@ -42,12 +31,6 @@
     <div>
       <%= f.label :stock_quantity, "在庫数", class: "block font-semibold mb-2" %>
       <%= f.number_field :stock_quantity, class: "w-full px-4 py-2 border rounded" %>
-    </div>
-
-    <div>
-      <%= f.label :images, "商品画像（新しい画像を追加）", class: "block font-semibold mb-2" %>
-      <%= f.file_field :images, multiple: true, accept: "image/*", class: "w-full" %>
-      <p class="text-sm text-gray-600 mt-1">複数枚選択できます</p>
     </div>
 
     <div>

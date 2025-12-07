@@ -4,18 +4,6 @@
   </div>
 
   <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-    <% if @product.images.attached? %>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
-        <% @product.images.each do |image| %>
-          <%= image_tag image, class: "w-full h-64 object-cover rounded" %>
-        <% end %>
-      </div>
-    <% else %>
-      <div class="w-full h-64 bg-gray-200 flex items-center justify-center">
-        <span class="text-gray-400">画像なし</span>
-      </div>
-    <% end %>
-
     <div class="p-6">
       <h1 class="text-3xl font-bold mb-4"><%= @product.title %></h1>
       
