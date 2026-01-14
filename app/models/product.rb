@@ -1,7 +1,7 @@
 class Product < ApplicationRecord
   # リレーション
   belongs_to :seller, class_name: 'User'
-  has_many_attached :images
+  has_one_attached :image
   
   # Enum
   enum status: { draft: 0, published: 1, sold_out: 2 }

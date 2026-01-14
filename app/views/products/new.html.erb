@@ -32,7 +32,11 @@
       <%= f.label :stock_quantity, "在庫数", class: "block font-semibold mb-2" %>
       <%= f.number_field :stock_quantity, class: "w-full px-4 py-2 border rounded", placeholder: "10" %>
     </div>
-
+    <div>
+      <%= f.label :image, "商品画像", class: "block font-semibold mb-2" %>
+      <%= f.file_field :image, accept: "image/*", class: "w-full px-4 py-2 border rounded" %>
+      <p class="text-sm text-gray-600 mt-1">※ 推奨サイズ: 800x800px以上</p>
+    </div>
     <div>
       <%= f.label :status, "公開設定", class: "block font-semibold mb-2" %>
       <%= f.select :status, [["下書き", "draft"], ["公開", "published"]], {}, class: "w-full px-4 py-2 border rounded" %>

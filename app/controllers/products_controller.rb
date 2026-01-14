@@ -5,7 +5,7 @@ class ProductsController < ApplicationController
   before_action :authorize_owner!, only: [:edit, :update, :destroy]
 
   def index
-    @products = Product.published_items.includes(:seller, images_attachments: :blob)
+    @products = Product.published_items.includes(:seller, image_attachment: :blob)
   end
 
   def show
@@ -48,7 +48,7 @@ class ProductsController < ApplicationController
   end
 
   def product_params
-    params.require(:product).permit(:title, :description, :price, :stock_quantity, :status, images: [])
+    params.require(:product).permit(:title, :description, :price, :stock_quantity, :status, :image)
   end
 
   def authorize_seller!
