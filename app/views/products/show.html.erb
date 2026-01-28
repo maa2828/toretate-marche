@@ -8,8 +8,8 @@
       <h1 class="text-3xl font-bold mb-4"><%= @product.title %></h1>
       <% if @product.image.attached? %>
         <div class="mb-6">
-          <%= image_tag @product.image, class: "w-full max-w-2xl mx-auto rounded-lg" %>
-        </div>
+        <%= image_tag @product.image, class: "w-full max-w-2xl mx-auto rounded-lg" %>
+      </div>
       <% end %>
       <div class="flex justify-between items-center mb-6">
         <span class="text-3xl font-bold text-green-600">¥<%= number_with_delimiter(@product.price) %></span>
