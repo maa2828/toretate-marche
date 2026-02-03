@@ -1,11 +1,18 @@
 class ProductsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_product, only: [:show, :edit, :update, :destroy]
-  before_action :authorize_seller!, only: [:new, :create, :edit, :update, :destroy]
-  before_action :authorize_owner!, only: [:edit, :update, :destroy]
+  before_action :set_product, only: [:show, :edit, :update, :destroy, :toggle_status]
+  before_action :authorize_seller!, only: [:new, :create, :edit, :update, :destroy, :toggle_status]
+  before_action :authorize_owner!, only: [:edit, :update, :destroy, :toggle_status]
 
   def index
-    @products = Product.published_items.includes(:seller, image_attachment: :blob)
+    if current_user&.seller?
+      # 生産者の場合：公開商品と自分の全商品を表示
+      @products = Product.published.includes(:seller, image_attachment: :blob)
+      @my_products = current_user.products.includes(image_attachment: :blob)
+    else
+      # 購入者の場合：公開商品のみ表示
+      @products = Product.published.includes(:seller, image_attachment: :blob)
+    end
   end
 
   def show
@@ -39,6 +46,18 @@ class ProductsController < ApplicationController
   def destroy
     @product.destroy
     redirect_to products_path, notice: '商品を削除しました'
+  end
+
+  # 新しく追加：ステータス切り替え
+  def toggle_status
+    new_status = @product.published? ? :draft : :published
+    
+    if @product.update(status: new_status)
+      status_text = @product.published? ? '公開' : '非公開'
+      redirect_to products_path, notice: "商品を#{status_text}にしました"
+    else
+      redirect_to products_path, alert: 'ステータスの変更に失敗しました'
+    end
   end
 
   private
