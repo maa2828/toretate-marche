@@ -1,0 +1,71 @@
+<div class="container mx-auto px-4 py-8">
+  <h1 class="text-3xl font-bold mb-6">カート</h1>
+
+  <% if @cart_items.empty? %>
+    <div class="bg-gray-100 rounded-lg p-8 text-center">
+      <p class="text-gray-600 mb-4">カートは空です</p>
+      <%= link_to "商品を見る", products_path, class: "inline-block bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700" %>
+    </div>
+  <% else %>
+    <div class="bg-white rounded-lg shadow overflow-hidden">
+      <table class="w-full">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">商品</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">価格</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">数量</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">小計</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">操作</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200">
+          <% @cart_items.each do |item| %>
+            <tr>
+              <td class="px-6 py-4">
+                <div class="flex items-center">
+                  <% if item[:product].image.attached? %>
+                    <%= image_tag item[:product].image, class: "w-16 h-16 object-cover rounded mr-4" %>
+                  <% else %>
+                    <div class="w-16 h-16 bg-gray-200 rounded mr-4 flex items-center justify-center">
+                      <span class="text-gray-400">画像なし</span>
+                    </div>
+                  <% end %>
+                    <div>
+                    <%= link_to item[:product].title, product_path(item[:product]), class: "text-blue-600 hover:underline font-medium" %>
+                    <p class="text-sm text-gray-500">出品者: <%= item[:product].seller.name %></p>
+                  </div>
+                </div>
+              </td>
+              <td class="px-6 py-4">¥<%= number_with_delimiter(item[:product].price) %></td>
+              <td class="px-6 py-4">
+                <%= form_with url: update_item_cart_path(product_id: item[:product].id), method: :patch, local: true, class: "flex items-center" do |f| %>
+                  <%= f.number_field :quantity, value: item[:quantity], min: 1, max: item[:product].stock_quantity, class: "w-20 border rounded px-2 py-1" %>
+                  <%= f.submit "更新", class: "ml-2 bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700" %>
+                <% end %>
+              </td>
+              <td class="px-6 py-4 font-semibold">¥<%= number_with_delimiter(item[:subtotal]) %></td>
+              <td class="px-6 py-4">
+                <%= button_to "削除", remove_item_cart_path(product_id: item[:product].id), method: :delete, class: "text-red-600 hover:text-red-800", data: { confirm: "本当に削除しますか?" } %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+
+      <div class="p-6 bg-gray-50 border-t">
+        <div class="flex justify-between items-center mb-4">
+          <span class="text-xl font-semibold">合計金額:</span>
+          <span class="text-2xl font-bold text-green-600">¥<%= number_with_delimiter(@total) %></span>
+        </div>
+        <div class="flex justify-between items-center">
+          <%= button_to "カートを空にする", clear_cart_path, method: :delete, class: "text-red-600 hover:text-red-800", data: { confirm: "カートを空にしますか?" } %>
+          <%= link_to "注文に進む", "#", class: "bg-green-600 text-white px-8 py-3 rounded-lg hover:bg-green-700 font-semibold" %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="mt-6">
+    <%= link_to "← 買い物を続ける", products_path, class: "text-blue-600 hover:underline" %>
+  </div>
+</div>
