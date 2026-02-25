@@ -1,0 +1,46 @@
+<div class="container mx-auto px-4 py-8">
+  <h1 class="text-3xl font-bold mb-6">注文履歴</h1>
+
+  <% if @orders.empty? %>
+    <div class="bg-gray-100 rounded-lg p-8 text-center">
+      <p class="text-gray-600 mb-4">注文履歴はまだありません</p>
+      <%= link_to "商品を見る", products_path, class: "inline-block bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700" %>
+    </div>
+  <% else %>
+    <div class="space-y-4">
+      <% @orders.each do |order| %>
+        <div class="bg-white rounded-lg shadow overflow-hidden">
+          <div class="p-6">
+            <div class="flex justify-between items-start mb-4">
+              <div>
+                <p class="text-sm text-gray-600">注文番号: #<%= order.id %></p>
+                <p class="text-sm text-gray-600">注文日: <%= order.created_at.strftime('%Y年%m月%d日 %H:%M') %></p>
+              </div>
+              <span class="px-3 py-1 rounded <%= order.pending? ? 'bg-yellow-100 text-yellow-800' : order.confirmed? ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' %>">
+                <%= order.pending? ? '注文受付中' : order.confirmed? ? '確定済み' : 'キャンセル' %>
+              </span>
+            </div>
+　　　　　　　<div class="mb-4">
+              <% order.order_items.each do |item| %>
+                <div class="flex items-center py-2">
+                  <% if item.product&.image&.attached? %>
+                    <%= image_tag item.product.image, class: "w-12 h-12 object-cover rounded mr-3" %>
+                  <% end %>
+                  <div class="flex-1">
+                    <p class="font-medium"><%= item.title_snapshot %></p>
+                    <p class="text-sm text-gray-500"><%= item.quantity %>個 × ¥<%= number_with_delimiter(item.price_snapshot) %></p>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+
+            <div class="flex justify-between items-center pt-4 border-t">
+              <span class="text-xl font-bold">合計: ¥<%= number_with_delimiter(order.total_amount) %></span>
+              <%= link_to "詳細を見る", order_path(order), class: "text-blue-600 hover:underline" %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+</div>

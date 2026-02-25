@@ -38,14 +38,14 @@
               </td>
               <td class="px-6 py-4">¥<%= number_with_delimiter(item[:product].price) %></td>
               <td class="px-6 py-4">
-                <%= form_with url: update_item_cart_path(product_id: item[:product].id), method: :patch, local: true, class: "flex items-center" do |f| %>
+                <%= form_with url: cart_update_item_path(product_id: item[:product].id), method: :patch, local: true, class: "flex items-center" do |f| %>
                   <%= f.number_field :quantity, value: item[:quantity], min: 1, max: item[:product].stock_quantity, class: "w-20 border rounded px-2 py-1" %>
                   <%= f.submit "更新", class: "ml-2 bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700" %>
                 <% end %>
               </td>
               <td class="px-6 py-4 font-semibold">¥<%= number_with_delimiter(item[:subtotal]) %></td>
               <td class="px-6 py-4">
-                <%= button_to "削除", remove_item_cart_path(product_id: item[:product].id), method: :delete, class: "text-red-600 hover:text-red-800", data: { confirm: "本当に削除しますか?" } %>
+                <%= button_to "削除", cart_remove_item_path(product_id: item[:product].id), method: :delete, class: "text-red-600 hover:text-red-800", data: { confirm: "本当に削除しますか?" } %>
               </td>
             </tr>
           <% end %>
@@ -58,8 +58,8 @@
           <span class="text-2xl font-bold text-green-600">¥<%= number_with_delimiter(@total) %></span>
         </div>
         <div class="flex justify-between items-center">
-          <%= button_to "カートを空にする", clear_cart_path, method: :delete, class: "text-red-600 hover:text-red-800", data: { confirm: "カートを空にしますか?" } %>
-          <%= link_to "注文に進む", "#", class: "bg-green-600 text-white px-8 py-3 rounded-lg hover:bg-green-700 font-semibold" %>
+          <%= button_to "カートを空にする", cart_clear_path, method: :delete, class: "text-red-600 hover:text-red-800", data: { confirm: "カートを空にしますか?" } %>
+          <%= link_to "注文に進む", new_order_path, class: "bg-green-600 text-white px-8 py-3 rounded-lg hover:bg-green-700 font-semibold" %>
         </div>
       </div>
     </div>

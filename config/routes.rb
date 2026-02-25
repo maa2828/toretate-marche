@@ -11,12 +11,14 @@ Rails.application.routes.draw do
   end
   
   # カート機能
-  resource :cart, only: [:show], controller: 'carts' do
-    post 'add_item/:product_id', to: 'carts#add_item', as: :add_item
-    patch 'update_item/:product_id', to: 'carts#update_item', as: :update_item
-    delete 'remove_item/:product_id', to: 'carts#remove_item', as: :remove_item
-    delete 'clear', to: 'carts#clear'
-  end
+  get 'cart', to: 'carts#show', as: 'cart'
+  post 'cart/add/:product_id', to: 'carts#add_item', as: 'cart_add_item'
+  patch 'cart/update/:product_id', to: 'carts#update_item', as: 'cart_update_item'
+  delete 'cart/remove/:product_id', to: 'carts#remove_item', as: 'cart_remove_item'
+  delete 'cart/clear', to: 'carts#clear', as: 'cart_clear'
+  
+  # 注文機能
+  resources :orders, only: [:index, :show, :new, :create]
   
   # ホーム画面
   get 'home', to: 'home#index'

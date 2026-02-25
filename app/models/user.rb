@@ -8,6 +8,7 @@ class User < ApplicationRecord
   
   # リレーション
   has_many :products, foreign_key: :seller_id, dependent: :destroy
+  has_many :orders, foreign_key: :buyer_id, dependent: :destroy
   
   # Validations
   validates :name, presence: true
